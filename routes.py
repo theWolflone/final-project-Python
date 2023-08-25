@@ -6,3 +6,92 @@ fake_items_db = [{"item_name": "Foo"},{"item_name": "Bar"},{"item_name": "Baz"}]
 @app.get("/item/")
 async def read_item(skip : int = 0, limit : int = 10):
     return fake_items_db[skip : skip +  limit]
+
+from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
+
+from user import *
+
+class ItemUser(BaseModel):
+    cedula: str
+    nombre : str
+    primerapellido : str
+    segundoapellido : str
+    direccion : str
+    correo : str
+    tipo : str
+    clave : str
+
+@app.get("/archivouser")
+async def root():
+    return FileResponse('user.html')
+
+@app.get("/userjs")
+async def root():
+    return FileResponse('userFrontend.js')
+
+@app.get("/users")
+async def root():
+    usuario = User()
+    
+    listausersarchivo = usuario.listar()
+    for elemento in listausersarchivo:
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
+    return listausersarchivo 
+
+@app.put("/users")
+async def root(item:ItemUser):
+    usuario  = User()
+    usuario.cedula = item.cedula
+    usuario.nombre = item.nombre
+    usuario.primerapellido = item.primerapellido
+    usuario.segundoapellido = item.segundoapellido
+    usuario.direccion =  item.direccion
+    usuario.correo= item.correo
+    usuario.tipo = item.tipo
+    usuario.clave = item.clave
+    usuario.guardar()
+    listausersarchivo = usuario.listar()
+    for elemento in listausersarchivo:
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
+    return listausersarchivo
+
+@app.delete("/users")
+async def root(item:ItemUser):
+    usuario  = User()
+    usuario.cedula = item.cedula
+    usuario.nombre = item.nombre
+    usuario.primerapellido = item.primerapellido
+    usuario.segundoapellido = item.segundoapellido
+    usuario.direccion =  item.direccion
+    usuario.correo= item.correo
+    usuario.tipo = item.tipo
+    usuario.clave = item.clave
+    usuario.eliminar()
+    listausersarchivo = usuario.listar()
+    for elemento in listausersarchivo:
+       elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
+       elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
+    return listausersarchivo
+
+@app.post("/users")
+async def root(item:ItemUser):
+    usuario  = User()
+    usuario.cedula = item.cedula
+    usuario.nombre = item.nombre
+    usuario.primerapellido = item.primerapellido
+    usuario.segundoapellido = item.segundoapellido
+    usuario.direccion =  item.direccion
+    usuario.correo= item.correo
+    usuario.tipo = item.tipo
+    usuario.clave = item.clave
+    usuario.modificar()
+
+    listausersarchivo = usuario.listar()
+    for elemento in listausersarchivo:
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
+    return listausersarchivo

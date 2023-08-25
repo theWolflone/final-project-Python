@@ -125,7 +125,7 @@ class User(persona):
         datosentexto=""
         for elemento in lista:
             datosentexto +=  elemento.cedula + '*' + elemento.nombre + '*' + elemento.primerapellido + '*' + elemento.segundoapellido + '*' + elemento.direccion + '*' + elemento.correo + '*' + elemento.tipo +'*' + elemento.clave +'>'
-        file_name = 'Cliente.txt'#cargamos el archivo de texto en una variable
+        file_name = 'User.txt'#cargamos el archivo de texto en una variable
         with open(file_name, 'w') as x_file:
             x_file.write(datosentexto)
     
@@ -134,7 +134,7 @@ class User(persona):
     def eliminar(self):
            listadeusuarios=[]
            if(self.cedula != "" ):
-               with open("Cliente.txt", "r") as myfile:
+               with open("User.txt", "r") as myfile:
 
                 data = myfile.readlines()
                 #el archivo de texto guarda los clientes sin formato, es decir en texto puro, entonces separamos los datos con caracteres comodines

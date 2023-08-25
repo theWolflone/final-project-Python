@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="userjs"></script>
+  </head>
+
+  <body>
+    <div>
+      <h1>
+        <strong
+          >Bienvenido a tu <br />
+          tienda favorita</strong
+        >
+      </h1>
+      <h3>Es hora de registrarte como cliente</h3>
+      <p>
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. A eum aut
+        incidunt expedita asperiores deleniti nemo aperiam qui ex dicta pariatur
+        culpa adipisci, repellendus eius itaque architecto porro numquam modi.
+      </p>
+    </div>
+    <br />
+
+    <div>
+      <input
+        type="text"
+        id="cedula"
+        placeholder="Coloca tu cédula"
+      /><br /><br />
+      <input
+        type="text"
+        id="nombre"
+        placeholder="Coloca tu nombre"
+      /><br /><br />
+      <input
+        type="text"
+        id="primerapellido"
+        placeholder="Coloca tu  primer apellido"
+      /><br /><br />
+      <input
+        type="text"
+        id="segundoapellido"
+        placeholder="Coloca tu segundo apellido"
+      /><br /><br />
+    </div>
+    <br /><br />
+    <br />
+    <div>
+      <input
+        type="text"
+        id="direccion"
+        placeholder="Coloca tu direccion"
+      /><br /><br />
+      <input
+        type="text"
+        id="correo"
+        placeholder="Coloca tu correo"
+      /><br /><br />
+      <input
+        type="text"
+        id="tipo"
+        placeholder="Coloca el tipo de cliente que eres"
+      /><br /><br />
+      <input type="text" id="clave" placeholder="Digita tu clave" /><br /><br />
+    </div>
+    <br />
+    <input type="button" id="botonaccion" value="Guardar" onclick="guardar()" />
+
+    <br /><br />
+    <div id="espacioparatabla"></div>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.js"
+      integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+    />
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+      var listadeusersenmemoria = [];
+      var objetousersparamodificar = null;
+
+      var usuarioinstanciado = new User("", "", "", "", "", "", "", "");
+      usuarioinstanciado.Seleccionartodos().then(
+        function (response) {
+          cargartabla(response);
+          console.log(response);
+        },
+        function (err) {
+          alert(err);
+        }
+      );
+
+      function cargartabla(datos) {
+        document.getElementById("espacioparatabla").innerHTML =
+          '<table style=" color:  #ece2f3;" id="usuariotabla" class="display"><thead><th>cedula</th><th>nombre</th><th>primerapellido</th><th>segundoapellido</th><th>direccion</th><th>correo</th><th>tipo</th><th>clave</th><th>Modificar</th><th>Eliminar</th></thead><tbody></tbody></table>';
+        listadeusersenmemoria = datos;
+        $("#usuariotabla").DataTable({
+          "data": datos,
+          "columns": [
+            { "data": "cedula" },
+            { "data": "nombre" },
+            { "data": "primerapellido" },
+            { "data": "segundoapellido" },
+            { "data": "direccion" },
+            { "data": "correo" },
+            { "data": "tipo" },
+            { "data": "clave" },
+            { "data": "modificar" },
+            { "data": "eliminar" },
+          ],
+        });
+      }
+      function guardar() {
+        var usuarioinstanciado = new User(
+          document.getElementById("cedula").value,
+          document.getElementById("nombre").value,
+          document.getElementById("primerapellido").value,
+          document.getElementById("segundoapellido").value,
+          document.getElementById("direccion").value,
+          document.getElementById("correo").value,
+          document.getElementById("tipo").value,
+          document.getElementById("clave").value
+        );
+        usuarioinstanciado.Guardar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Guardado");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+
+      function modificausuarioprimerpaso(cedula) {
+        for (var ele in listadeusersenmemoria) {
+          if (listadeusersenmemoria[ele].cedula == cedula) {
+            objetousersparamodificar = listadeusersenmemoria[ele];
+            break;
+          }
+        }
+
+        document.getElementById("cedula").value =
+          objetousersparamodificar.cedula;
+        document.getElementById("nombre").value =
+          objetousersparamodificar.nombre;
+        document.getElementById("primerapellido").value =
+          objetousersparamodificar.primerapellido;
+        document.getElementById("segundoapellido").value =
+          objetousersparamodificar.segundoapellido;
+        document.getElementById("direccion").value =
+          objetousersparamodificar.direccion;
+        document.getElementById("correo").value =
+          objetousersparamodificar.correo;
+        document.getElementById("tipo").value = objetousersparamodificar.tipo;
+        document.getElementById("clave").value = objetousersparamodificar.clave;
+        document.getElementById("botonaccion").value = "Modificar";
+        document
+          .getElementById("botonaccion")
+          .setAttribute("onClick", "modificaenarchivo()");
+      }
+
+      function modificaenarchivo() {
+        var usuarioinstanciado = new User(
+          document.getElementById("cedula").value,
+          document.getElementById("nombre").value,
+          document.getElementById("primerapellido").value,
+          document.getElementById("segundoapellido").value,
+          document.getElementById("direccion").value,
+          document.getElementById("correo").value,
+          document.getElementById("tipo").value,
+          document.getElementById("clave").value
+        );
+        usuarioinstanciado.Modificar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Modificado");
+            (document.getElementById("cedula").value = ""),
+              (document.getElementById("nombre").value = ""),
+              (document.getElementById("primerapellido").value = ""),
+              (document.getElementById("segundoapellido").value = ""),
+              (document.getElementById("direccion").value = ""),
+              (document.getElementById("correo").value = ""),
+              (document.getElementById("tipo").value = ""),
+              (document.getElementById("clave").value = "");
+            document.getElementById("botonaccion").value = "Guardar";
+            document
+              .getElementById("botonaccion")
+              .setAttribute("onClick", "guardar()");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+      function eliminausuario(cedula) {
+        var usuarioinstanciado = new User(cedula, "", "", "", "", "", "", "");
+        usuarioinstanciado.Eliminar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Eliminado");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+    </script>
+  </body>
+</html>
