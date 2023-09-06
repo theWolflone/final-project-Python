@@ -12,6 +12,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from user import *
+from obra import *
 
 class ItemUser(BaseModel):
     cedula: str
@@ -23,13 +24,26 @@ class ItemUser(BaseModel):
     tipo : str
     clave : str
 
+class ItemObra(BaseModel):
+    id: str
+    nombre: str
+    creador: str
+
 @app.get("/archivouser")
 async def root():
     return FileResponse('user.html')
 
+@app.get("/archivoobra")
+async def root():
+    return FileResponse('obra.html')
+
 @app.get("/userjs")
 async def root():
     return FileResponse('userFrontend.js')
+
+@app.get("/obrajs")
+async def root():
+    return FileResponse('obraFrontend.js')
 
 @app.get("/users")
 async def root():
@@ -40,6 +54,16 @@ async def root():
         elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
     return listausersarchivo 
+
+@app.get("/obras")
+async def root():
+    obra = Obra()
+    
+    listaobrasarchivo = obra.listar()
+    for elemento in listaobrasarchivo:
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+    return listaobrasarchivo 
 
 @app.put("/users")
 async def root(item:ItemUser):
@@ -59,6 +83,21 @@ async def root(item:ItemUser):
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
     return listausersarchivo
 
+
+@app.put("/obras")
+async def root(item:ItemObra):
+    obra  = Obra()
+    obra.id = item.id
+    obra.nombre = item.nombre
+    obra.creador = item.creador
+    
+    obra.guardar()
+    listaobrasarchivo = obra.listar()
+    for elemento in listaobrasarchivo:
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+    return listaobrasarchivo
+
 @app.delete("/users")
 async def root(item:ItemUser):
     usuario  = User()
@@ -76,6 +115,19 @@ async def root(item:ItemUser):
        elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
     return listausersarchivo
+
+@app.delete("/obras")
+async def root(item:ItemObra):
+    obra  = Obra()
+    obra.id = item.id
+    obra.nombre = item.nombre
+    obra.creador = item.creador
+    obra.eliminar()
+    listaobrasarchivo = obra.listar()
+    for elemento in listaobrasarchivo:
+       elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
+       elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+    return listaobrasarchivo
 
 @app.post("/users")
 async def root(item:ItemUser):
@@ -95,3 +147,18 @@ async def root(item:ItemUser):
         elemento.modificar = '<input type="button" value="modificar" onclick="modificausuarioprimerpaso(\''+ elemento.cedula +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminausuario(\''+ elemento.cedula +'\')"></input>'
     return listausersarchivo
+
+@app.post("/obras")
+async def root(item:ItemObra):
+    obra  = Obra()
+    obra.id = item.id
+    obra.nombre = item.nombre
+    obra.creador = item.creador
+    
+    obra.modificar()
+
+    listaobrasarchivo = obra.listar()
+    for elemento in listaobrasarchivo:
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+    return listaobrasarchivo

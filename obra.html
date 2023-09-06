@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="obrajs"></script>
+  </head>
+
+  <body>
+    <div>
+      <h1>
+        <strong
+          >Bienvenido a tu <br />
+          tienda favorita</strong
+        >
+      </h1>
+      <h3>Es hora de registrarte como cliente</h3>
+      <p>
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. A eum aut
+        incidunt expedita asperiores deleniti nemo aperiam qui ex dicta pariatur
+        culpa adipisci, repellendus eius itaque architecto porro numquam modi.
+      </p>
+    </div>
+    <br />
+
+    <div>
+      <input
+        type="text"
+        id="id"
+        placeholder="Coloca un id"
+      /><br /><br />
+      <input
+        type="text"
+        id="nombre"
+        placeholder="Nombre de la obra"
+      /><br /><br />
+      <input
+        type="text"
+        id="creador"
+        placeholder="Nombre del creador"
+      /><br /><br />
+    </div>
+    <br />
+    <input type="button" id="botonaccion" value="Guardar" onclick="guardar()" />
+
+    <br /><br />
+    <div id="espacioparatabla"></div>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.js"
+      integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+    />
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+      var listadeobrasenmemoria = [];
+      var objetoobrasparamodificar = null;
+
+      var obrainstanciada = new Obra("", "", "");
+      obrainstanciada.Seleccionartodos().then(
+        function (response) {
+          cargartabla(response);
+          console.log(response);
+        },
+        function (err) {
+          alert(err);
+        }
+      );
+
+      function cargartabla(datos) {
+        document.getElementById("espacioparatabla").innerHTML =
+          '<table style=" color:  #ece2f3;" id="obratabla" class="display"><thead><th>id</th><th>nombre</th><th>creador</th><th>Modificar</th><th>Eliminar</th></thead><tbody></tbody></table>';
+          listadeobrasenmemoria = datos;
+        $("#obratabla").DataTable({
+          "data": datos,
+          "columns": [
+            { "data": "id" },
+            { "data": "nombre" },
+            { "data": "creador" },
+            { "data": "modificar" },
+            { "data": "eliminar" },
+          ],
+        });
+      }
+      function guardar() {
+        var obrainstanciada = new User(
+          document.getElementById("id").value,
+          document.getElementById("nombre").value,
+          document.getElementById("creador").value,
+        );
+        obrainstanciada.Guardar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Guardado");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+
+      function modificaobraprimerpaso(id) {
+        for (var ele in listadeobrasenmemoria) {
+          if (listadeobrasenmemoria[ele].id == id) {
+            objetoobrasparamodificar = listadeobrasenmemoria[ele];
+            break;
+          }
+        }
+
+        document.getElementById("id").value =
+        objetoobrasparamodificar.id;
+        document.getElementById("nombre").value =
+        objetoobrasparamodificar.nombre;
+        document.getElementById("creador").value =
+        objetoobrasparamodificar.creador;
+        document.getElementById("botonaccion").value = "Modificar";
+        document
+          .getElementById("botonaccion")
+          .setAttribute("onClick", "modificaenarchivo()");
+      }
+
+      function modificaenarchivo() {
+        var obrainstanciada = new User(
+          document.getElementById("id").value,
+          document.getElementById("nombre").value,
+          document.getElementById("creador").value,
+        );
+        obrainstanciada.Modificar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Modificado");
+            (document.getElementById("id").value = ""),
+              (document.getElementById("nombre").value = ""),
+              (document.getElementById("creador").value = ""),
+            document.getElementById("botonaccion").value = "Guardar";
+            document
+              .getElementById("botonaccion")
+              .setAttribute("onClick", "guardar()");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+      function eliminaobra(id) {
+        var obrainstanciada = new Obra(id, "", "");
+        obrainstanciada.Eliminar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Eliminado");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+    </script>
+  </body>
+</html>
