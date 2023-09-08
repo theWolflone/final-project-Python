@@ -4,6 +4,7 @@ from user import *
 class Obra():
     id = ""
     nombre= ""
+    calificacion=""
     creador= User()
     def guardar(self):
          bandera = True
@@ -21,13 +22,16 @@ class Obra():
                         sublista = elemento.split('*')  # creamos una nueva lista por cada objeto de la lista anterior, esta vez separandola por el campo
                     
                         if(self.id == sublista[0]):
-                            print("Cedula ingresada ya existe en nuestros registros")
+                            print("Id ingresado ya existe en nuestros registros")
                             bandera= False
                             break
                         else:
                             self.id = sublista[0]
                             self.nombre = sublista[1]
-                            self.creador= sublista[2]
+                            self.calificacion = sublista[2]
+                            user = User()
+                            user.nombre = sublista[3]
+                            self.creador= user
                             
                             
                     
@@ -36,7 +40,7 @@ class Obra():
          if bandera:
              file_name = 'Obras.txt'#cargamos el archivo de texto en una variable
              with open(file_name, 'a') as x_file:
-                    x_file.write(self.id + '*' + self.nombre + '*' + self.creador + '*' +'>')
+                    x_file.write(self.id + '*' + self.nombre + self.calificacion +'*' + self.creador + '*' +'>')
              print("Dato Guardado correctamente")
              
          
@@ -65,7 +69,10 @@ class Obra():
                     
                         nuevaobra.id = sublista[0]
                         nuevaobra.nombre = sublista[1]
-                        nuevaobra.creador= sublista[2]
+                        nuevaobra.calificacion = sublista[2]
+                        user = User()
+                        user.nombre = sublista[3]
+                        nuevaobra.creador= user
                         listadeobras.append(nuevaobra)
                     except Exception:
                         pass
@@ -74,7 +81,7 @@ class Obra():
     def rellenaarchivoconlalista(self,lista):
         datosentexto=""
         for elemento in lista:
-            datosentexto +=  elemento.id + '*' + elemento.nombre + '*' + elemento.creador + '*' +'>'
+            datosentexto +=  elemento.id + '*' + elemento.nombre + elemento.calificacion + '*' + elemento.creador + '*' +'>'
         file_name = 'Obras.txt'#cargamos el archivo de texto en una variable
         with open(file_name, 'w') as x_file:
             x_file.write(datosentexto)
@@ -103,7 +110,10 @@ class Obra():
                                 nuevaobra = Obra()
                                 nuevaobra.id = sublista[0]
                                 nuevaobra.nombre = sublista[1]
-                                nuevaobra.creador= sublista[2]
+                                nuevaobra.calificacion = sublista[2]
+                                user = User()
+                                user.nombre = sublista[3]
+                                nuevaobra.creador= user.nombre
                                 
                                
                                 listadeobras.append(nuevaobra)
@@ -140,7 +150,10 @@ class Obra():
                                 nuevaobra = Obra()
                                 nuevaobra.id = sublista[0]
                                 nuevaobra.nombre = sublista[1]
-                                nuevaobra.creador= sublista[2]
+                                nuevaobra.calificacion = sublista[2]
+                                user = User()
+                                user.nombre = sublista[3]
+                                nuevaobra.creador= user.nombre
                                 listadeobras.append(nuevaobra)
                         except Exception:
                             pass
@@ -149,7 +162,10 @@ class Obra():
                             listadeobras.remove(dato)
                             dato.id = self.id 
                             dato.nombre=self.nombre 
-                            dato.creador= self.creador
+                            dato.calificacion = self.calificacion
+                            user = User()
+                            user.nombre = self.creador
+                            dato.creador= user.nombre
                             listadeobras.append(dato)
                     self.rellenaarchivoconlalista(listadeobras)
                     print("Obra con id: " + self.id + " ha sido actualizado")

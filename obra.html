@@ -35,11 +35,6 @@
         id="nombre"
         placeholder="Nombre de la obra"
       /><br /><br />
-      <input
-        type="text"
-        id="creador"
-        placeholder="Nombre del creador"
-      /><br /><br />
     </div>
     <br />
     <input type="button" id="botonaccion" value="Guardar" onclick="guardar()" />
@@ -58,10 +53,12 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
+      var usuario = JSON.parse(localStorage.getItem('userlogueado'))
+      console.log(usuario);
       var listadeobrasenmemoria = [];
       var objetoobrasparamodificar = null;
 
-      var obrainstanciada = new Obra("", "", "");
+      var obrainstanciada = new Obra("", "", "", "");
       obrainstanciada.Seleccionartodos().then(
         function (response) {
           cargartabla(response);
@@ -82,17 +79,21 @@
             { "data": "id" },
             { "data": "nombre" },
             { "data": "creador" },
+            { "data": "calificacion"},
             { "data": "modificar" },
             { "data": "eliminar" },
           ],
         });
       }
       function guardar() {
-        var obrainstanciada = new User(
+        var obrainstanciada = new Obra(
           document.getElementById("id").value,
           document.getElementById("nombre").value,
-          document.getElementById("creador").value,
+          usuario.nombre,
+          ''
+          
         );
+        console.log(obrainstanciada);
         obrainstanciada.Guardar().then(
           function (response) {
             cargartabla(response);
@@ -126,7 +127,7 @@
       }
 
       function modificaenarchivo() {
-        var obrainstanciada = new User(
+        var obrainstanciada = new Obra(
           document.getElementById("id").value,
           document.getElementById("nombre").value,
           document.getElementById("creador").value,

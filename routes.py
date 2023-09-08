@@ -27,7 +27,12 @@ class ItemUser(BaseModel):
 class ItemObra(BaseModel):
     id: str
     nombre: str
+    calificacion: str
     creador: str
+
+@app.get("/")
+async def root():
+    return FileResponse('login.html')
 
 @app.get("/archivouser")
 async def root():
@@ -89,8 +94,11 @@ async def root(item:ItemObra):
     obra  = Obra()
     obra.id = item.id
     obra.nombre = item.nombre
-    obra.creador = item.creador
-    
+    obra.calificacion = item.calificacion
+    usuario = User()
+    usuario.nombre = item.creador
+    obra.creador = usuario
+
     obra.guardar()
     listaobrasarchivo = obra.listar()
     for elemento in listaobrasarchivo:
@@ -153,6 +161,7 @@ async def root(item:ItemObra):
     obra  = Obra()
     obra.id = item.id
     obra.nombre = item.nombre
+    obra.calificacion = item.calificacion
     obra.creador = item.creador
     
     obra.modificar()
@@ -162,3 +171,19 @@ async def root(item:ItemObra):
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo
+
+
+
+
+@app.post("/loginusers")
+async def root(item:ItemUser):
+    usuario = User()
+    usuario.cedula = item.cedula
+    usuario.clave = item.clave
+    usuario.correo = item.correo
+    usuario.direccion= item.direccion
+    usuario.nombre = item.nombre
+    usuario.primerapellido = item.primerapellido
+    usuario.segundoapellido = item.segundoapellido
+    usuario.tipo = item.tipo
+    return usuario.login()
