@@ -1,11 +1,11 @@
-import os.path
 from user import *
+import os.path
 
 class Obra():
     id = ""
     nombre= ""
     calificacion=""
-    creador= User()
+    creador = User()
     def guardar(self):
          bandera = True
          with open("Obras.txt", "a+") as myfile:
@@ -28,10 +28,10 @@ class Obra():
                         else:
                             self.id = sublista[0]
                             self.nombre = sublista[1]
-                            self.calificacion = sublista[2]
                             user = User()
-                            user.nombre = sublista[3]
+                            user.nombre = sublista[2]
                             self.creador= user
+                            self.calificacion = sublista[3]
                             
                             
                     
@@ -40,7 +40,8 @@ class Obra():
          if bandera:
              file_name = 'Obras.txt'#cargamos el archivo de texto en una variable
              with open(file_name, 'a') as x_file:
-                    x_file.write(self.id + '*' + self.nombre + self.calificacion +'*' + self.creador + '*' +'>')
+                    x_file.write(self.id + '*' + self.nombre  +'*'+ self.creador.nombre + "*" + self.calificacion +'>')
+
              print("Dato Guardado correctamente")
              
          
@@ -69,10 +70,11 @@ class Obra():
                     
                         nuevaobra.id = sublista[0]
                         nuevaobra.nombre = sublista[1]
-                        nuevaobra.calificacion = sublista[2]
                         user = User()
-                        user.nombre = sublista[3]
+                        user.nombre = sublista[2]
                         nuevaobra.creador= user
+                        nuevaobra.calificacion = sublista[3]
+                        
                         listadeobras.append(nuevaobra)
                     except Exception:
                         pass
@@ -81,7 +83,7 @@ class Obra():
     def rellenaarchivoconlalista(self,lista):
         datosentexto=""
         for elemento in lista:
-            datosentexto +=  elemento.id + '*' + elemento.nombre + elemento.calificacion + '*' + elemento.creador + '*' +'>'
+            datosentexto +=  elemento.id + '*' + elemento.nombre + '*' + elemento.creador.nombre + "*" + elemento.calificacion +'>'
         file_name = 'Obras.txt'#cargamos el archivo de texto en una variable
         with open(file_name, 'w') as x_file:
             x_file.write(datosentexto)
@@ -110,10 +112,10 @@ class Obra():
                                 nuevaobra = Obra()
                                 nuevaobra.id = sublista[0]
                                 nuevaobra.nombre = sublista[1]
-                                nuevaobra.calificacion = sublista[2]
                                 user = User()
-                                user.nombre = sublista[3]
+                                user.nombre = sublista[2]
                                 nuevaobra.creador= user.nombre
+                                nuevaobra.calificacion = sublista[3]
                                 
                                
                                 listadeobras.append(nuevaobra)

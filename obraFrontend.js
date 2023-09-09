@@ -3,10 +3,12 @@ class Obra {
         id,
         nombre,
         creador,
+        calificacion,
       ) {
         this.id = id;
         this.nombre = nombre;
         this.creador = creador;
+        this.calificacion = calificacion;
       }
     
       Guardar() {

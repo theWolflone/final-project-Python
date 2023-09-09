@@ -9,10 +9,11 @@ async def read_item(skip : int = 0, limit : int = 10):
 
 from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
+from fastapi import Request
 from pydantic import BaseModel
 
-from user import *
 from obra import *
+from user import *
 
 class ItemUser(BaseModel):
     cedula: str
@@ -27,8 +28,8 @@ class ItemUser(BaseModel):
 class ItemObra(BaseModel):
     id: str
     nombre: str
-    calificacion: str
     creador: str
+    calificacion: str
 
 @app.get("/")
 async def root():
@@ -66,6 +67,7 @@ async def root():
     
     listaobrasarchivo = obra.listar()
     for elemento in listaobrasarchivo:
+        elemento.creador = elemento.creador.nombre
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo 
@@ -94,14 +96,15 @@ async def root(item:ItemObra):
     obra  = Obra()
     obra.id = item.id
     obra.nombre = item.nombre
-    obra.calificacion = item.calificacion
     usuario = User()
     usuario.nombre = item.creador
     obra.creador = usuario
+    obra.calificacion = item.calificacion
 
     obra.guardar()
     listaobrasarchivo = obra.listar()
     for elemento in listaobrasarchivo:
+        elemento.creador = elemento.creador.nombre
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo

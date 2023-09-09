@@ -71,7 +71,7 @@
 
       function cargartabla(datos) {
         document.getElementById("espacioparatabla").innerHTML =
-          '<table style=" color:  #ece2f3;" id="obratabla" class="display"><thead><th>id</th><th>nombre</th><th>creador</th><th>Modificar</th><th>Eliminar</th></thead><tbody></tbody></table>';
+          '<table style="color:#000;" id="obratabla" class="display"><thead> <th>id</th> <th>nombre</th><th>creador</th> <th>calificacion</th> <th>Modificar</th> <th>Eliminar</th> </thead><tbody></tbody></table>';
           listadeobrasenmemoria = datos;
         $("#obratabla").DataTable({
           "data": datos,
@@ -90,8 +90,7 @@
           document.getElementById("id").value,
           document.getElementById("nombre").value,
           usuario.nombre,
-          ''
-          
+          ' ',
         );
         console.log(obrainstanciada);
         obrainstanciada.Guardar().then(
