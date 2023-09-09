@@ -132,10 +132,14 @@ async def root(item:ItemObra):
     obra  = Obra()
     obra.id = item.id
     obra.nombre = item.nombre
-    obra.creador = item.creador
+    usuario = User()
+    usuario.nombre = item.creador
+    obra.creador = usuario
+    obra.calificacion = item.calificacion
     obra.eliminar()
     listaobrasarchivo = obra.listar()
     for elemento in listaobrasarchivo:
+       elemento.creador = elemento.creador.nombre
        elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo
@@ -165,12 +169,12 @@ async def root(item:ItemObra):
     obra.id = item.id
     obra.nombre = item.nombre
     obra.calificacion = item.calificacion
-    obra.creador = item.creador
     
     obra.modificar()
 
     listaobrasarchivo = obra.listar()
     for elemento in listaobrasarchivo:
+        elemento.creador = elemento.creador.nombre
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo

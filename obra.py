@@ -74,7 +74,7 @@ class Obra():
                         user.nombre = sublista[2]
                         nuevaobra.creador= user
                         nuevaobra.calificacion = sublista[3]
-                        
+
                         listadeobras.append(nuevaobra)
                     except Exception:
                         pass
@@ -114,7 +114,7 @@ class Obra():
                                 nuevaobra.nombre = sublista[1]
                                 user = User()
                                 user.nombre = sublista[2]
-                                nuevaobra.creador= user.nombre
+                                nuevaobra.creador= user
                                 nuevaobra.calificacion = sublista[3]
                                 
                                
@@ -152,10 +152,10 @@ class Obra():
                                 nuevaobra = Obra()
                                 nuevaobra.id = sublista[0]
                                 nuevaobra.nombre = sublista[1]
-                                nuevaobra.calificacion = sublista[2]
                                 user = User()
-                                user.nombre = sublista[3]
-                                nuevaobra.creador= user.nombre
+                                user.nombre = sublista[2]
+                                nuevaobra.creador= user
+                                nuevaobra.calificacion = sublista[3]
                                 listadeobras.append(nuevaobra)
                         except Exception:
                             pass
@@ -165,9 +165,6 @@ class Obra():
                             dato.id = self.id 
                             dato.nombre=self.nombre 
                             dato.calificacion = self.calificacion
-                            user = User()
-                            user.nombre = self.creador
-                            dato.creador= user.nombre
                             listadeobras.append(dato)
                     self.rellenaarchivoconlalista(listadeobras)
                     print("Obra con id: " + self.id + " ha sido actualizado")

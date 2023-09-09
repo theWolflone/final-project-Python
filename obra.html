@@ -11,15 +11,13 @@
     <div>
       <h1>
         <strong
-          >Bienvenido a tu <br />
-          tienda favorita</strong
+          >Bienvenido a las obras del <br />
+          Festival de las Artes</strong
         >
       </h1>
-      <h3>Es hora de registrarte como cliente</h3>
+      <h3>Es hora de registrar y calificar obras</h3>
       <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. A eum aut
-        incidunt expedita asperiores deleniti nemo aperiam qui ex dicta pariatur
-        culpa adipisci, repellendus eius itaque architecto porro numquam modi.
+        Según la variedad de horas, califica la calidad de otros artistas y registra las tuyas para el mundo.
       </p>
     </div>
     <br />
@@ -51,6 +49,29 @@
       href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
     />
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
       var usuario = JSON.parse(localStorage.getItem('userlogueado'))
@@ -115,10 +136,9 @@
 
         document.getElementById("id").value =
         objetoobrasparamodificar.id;
+        document.getElementById("id").setAttribute("disabled", true)
         document.getElementById("nombre").value =
         objetoobrasparamodificar.nombre;
-        document.getElementById("creador").value =
-        objetoobrasparamodificar.creador;
         document.getElementById("botonaccion").value = "Modificar";
         document
           .getElementById("botonaccion")
@@ -129,16 +149,17 @@
         var obrainstanciada = new Obra(
           document.getElementById("id").value,
           document.getElementById("nombre").value,
-          document.getElementById("creador").value,
+          usuario.nombre,
+          ' ',
         );
+        
         obrainstanciada.Modificar().then(
           function (response) {
             cargartabla(response);
             console.log(response);
             alert("Modificado");
             (document.getElementById("id").value = ""),
-              (document.getElementById("nombre").value = ""),
-              (document.getElementById("creador").value = ""),
+            (document.getElementById("nombre").value = ""),
             document.getElementById("botonaccion").value = "Guardar";
             document
               .getElementById("botonaccion")
@@ -150,7 +171,7 @@
         );
       }
       function eliminaobra(id) {
-        var obrainstanciada = new Obra(id, "", "");
+        var obrainstanciada = new Obra(id, "", "", "");
         obrainstanciada.Eliminar().then(
           function (response) {
             cargartabla(response);
