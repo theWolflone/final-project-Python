@@ -70,6 +70,7 @@ async def root():
         elemento.creador = elemento.creador.nombre
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+        elemento.calificar = '<input type="button" value="calificar" onclick="calificaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo 
 
 @app.put("/users")
@@ -107,6 +108,7 @@ async def root(item:ItemObra):
         elemento.creador = elemento.creador.nombre
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+        elemento.calificar = '<input type="button" value="calificar" onclick="calificaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo
 
 @app.delete("/users")
@@ -142,6 +144,7 @@ async def root(item:ItemObra):
        elemento.creador = elemento.creador.nombre
        elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+       elemento.calificar = '<input type="button" value="calificar" onclick="calificaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo
 
 @app.post("/users")
@@ -177,6 +180,24 @@ async def root(item:ItemObra):
         elemento.creador = elemento.creador.nombre
         elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
         elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+        elemento.calificar = '<input type="button" value="calificar" onclick="calificaobra(\''+ elemento.id +'\')"></input>'
+    return listaobrasarchivo
+
+@app.post("/obrascalif")
+async def root(item:ItemObra):
+    obra  = Obra()
+    obra.id = item.id
+    obra.nombre = item.nombre
+    obra.calificacion = item.calificacion
+    
+    obra.calificar()
+
+    listaobrasarchivo = obra.listar()
+    for elemento in listaobrasarchivo:
+        elemento.creador = elemento.creador.nombre
+        elemento.modificar = '<input type="button" value="modificar" onclick="modificaobraprimerpaso(\''+ elemento.id +'\')"></input>'
+        elemento.eliminar = '<input type="button" value="eliminar" onclick="eliminaobra(\''+ elemento.id +'\')"></input>'
+        elemento.calificar = '<input type="button" value="calificar" onclick="calificaobra(\''+ elemento.id +'\')"></input>'
     return listaobrasarchivo
 
 

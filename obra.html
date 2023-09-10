@@ -33,6 +33,15 @@
         id="nombre"
         placeholder="Nombre de la obra"
       /><br /><br />
+      <input
+        disabled
+        type="number"
+        min="0"
+        max="5"
+        style="width: 190px;"
+        id="calificacion"
+        placeholder="Calificación de la obra"
+      /> <br> <br>
     </div>
     <br />
     <input type="button" id="botonaccion" value="Guardar" onclick="guardar()" />
@@ -92,7 +101,7 @@
 
       function cargartabla(datos) {
         document.getElementById("espacioparatabla").innerHTML =
-          '<table style="color:#000;" id="obratabla" class="display"><thead> <th>id</th> <th>nombre</th><th>creador</th> <th>calificacion</th> <th>Modificar</th> <th>Eliminar</th> </thead><tbody></tbody></table>';
+          '<table style="color:#000;" id="obratabla" class="display"><thead> <th>id</th> <th>nombre</th><th>creador</th> <th>calificacion</th> <th>Modificar</th> <th>Eliminar</th> <th>Calificar</th> </thead><tbody></tbody></table>';
           listadeobrasenmemoria = datos;
         $("#obratabla").DataTable({
           "data": datos,
@@ -103,6 +112,7 @@
             { "data": "calificacion"},
             { "data": "modificar" },
             { "data": "eliminar" },
+            { "data": "calificar" },
           ],
         });
       }
@@ -111,7 +121,7 @@
           document.getElementById("id").value,
           document.getElementById("nombre").value,
           usuario.nombre,
-          ' ',
+          ' ' 
         );
         console.log(obrainstanciada);
         obrainstanciada.Guardar().then(
@@ -183,6 +193,58 @@
           }
         );
       }
+      function calificaobra(id) {
+        for (var ele in listadeobrasenmemoria) {
+          if (listadeobrasenmemoria[ele].id == id) {
+            objetoobrasparamodificar = listadeobrasenmemoria[ele];
+            break;
+          }
+        }
+
+        document.getElementById("id").value =
+        objetoobrasparamodificar.id;
+        document.getElementById("id").setAttribute("disabled", true);
+        document.getElementById("nombre").value =
+        objetoobrasparamodificar.nombre;
+        document.getElementById("nombre").setAttribute("disabled", true);
+        document.getElementById("calificacion").value = objetoobrasparamodificar.calificacion;
+        document.getElementById("calificacion").removeAttribute("disabled", true)
+        document.getElementById("botonaccion").value = "Calificar";
+        document
+          .getElementById("botonaccion")
+          .setAttribute("onClick", "calificaobraarchivo()");
+      }
+
+      function calificaobraarchivo() {
+        var obrainstanciada = new Obra(
+          document.getElementById("id").value,
+          document.getElementById("nombre").value,
+          usuario.nombre,
+          document.getElementById("calificacion").value,
+        );
+        
+        obrainstanciada.Calificar().then(
+          function (response) {
+            cargartabla(response);
+            console.log(response);
+            alert("Modificado");
+            (document.getElementById("id").value = ""),
+            document.getElementById("id").removeAttribute("disabled", true),
+            (document.getElementById("nombre").value = ""),
+            document.getElementById("nombre").removeAttribute("disabled", true),
+            (document.getElementById("calificacion").value = ""),
+            document.getElementById("calificacion").setAttribute("disabled", true),
+            document.getElementById("botonaccion").value = "Guardar";
+            document
+              .getElementById("botonaccion")
+              .setAttribute("onClick", "guardar()");
+          },
+          function (err) {
+            alert(err);
+          }
+        );
+      }
+      
     </script>
   </body>
 </html>

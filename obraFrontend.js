@@ -74,6 +74,27 @@ class Obra {
           }
         });
       }
+      Calificar() {
+        var objetoaenviar = this;
+    
+        return new Promise(function (resolve, reject) {
+          try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/obrascalif");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function () {
+              if (xhr.status == 200) {
+                resolve(JSON.parse(xhr.responseText));
+              } else {
+                reject(xhr);
+              }
+            };
+            xhr.send(JSON.stringify(objetoaenviar));
+          } catch (err) {
+            reject(err.message);
+          }
+        });
+      }
     
       Seleccionartodos() {
         var objetoaenviar = this;
