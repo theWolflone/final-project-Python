@@ -1,3 +1,4 @@
+// Creamos la clase de obra
 class Obra {
       constructor(
         id,
@@ -11,12 +12,17 @@ class Obra {
         this.calificacion = calificacion;
       }
     
+      // Metodos de la clase
+
+      // Metodo para guardar una obra
       Guardar() {
         var objetoaenviar = this;
     
+
         return new Promise(function (resolve, reject) {
           try {
             var xhr = new XMLHttpRequest();
+            // Enviamos la petición con el verbo correspondiente
             xhr.open("PUT", "/obras");
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function () {
@@ -32,6 +38,8 @@ class Obra {
           }
         });
       }
+
+      // Método para modificar una obra
       Modificar() {
         var objetoaenviar = this;
     
@@ -53,6 +61,8 @@ class Obra {
           }
         });
       }
+
+      // Metodo para eliminar una obra
       Eliminar() {
         var objetoaenviar = this;
     
@@ -74,6 +84,8 @@ class Obra {
           }
         });
       }
+
+      // Método para calificar las obras
       Calificar() {
         var objetoaenviar = this;
     
@@ -96,6 +108,7 @@ class Obra {
         });
       }
     
+      // Metodo para obtener todas las obras
       Seleccionartodos() {
         var objetoaenviar = this;
     

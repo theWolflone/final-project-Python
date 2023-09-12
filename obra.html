@@ -8,7 +8,9 @@
   </head>
 
   <body>
-    <div>
+    <div 
+    class="container"
+    >
       <h1>
         <strong
           >Bienvenido a las obras del <br />
@@ -22,7 +24,7 @@
     </div>
     <br />
 
-    <div>
+    <div class="container">
       <input
         type="text"
         id="id"
@@ -42,12 +44,13 @@
         id="calificacion"
         placeholder="Calificación de la obra"
       /> <br> <br>
+      <input type="button" id="botonaccion" value="Guardar" onclick="guardar()" />
+
     </div>
     <br />
-    <input type="button" id="botonaccion" value="Guardar" onclick="guardar()" />
 
     <br /><br />
-    <div id="espacioparatabla"></div>
+    <div class="container-xxl mb-3" id="espacioparatabla"></div>
     <script
       src="https://code.jquery.com/jquery-3.7.0.js"
       integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
@@ -83,12 +86,18 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
+      // Llamamos al usuario que se encuentra en sesión activa con las cookies
       var usuario = JSON.parse(localStorage.getItem('userlogueado'))
+      // Enviamos un console log para verificar que estamos recibiendo los datos correctos del usuario
       console.log(usuario);
+      //Creamos un array de la lista de las obras que se encuentran
       var listadeobrasenmemoria = [];
+      //Creamos un objeto para modificar las obras
       var objetoobrasparamodificar = null;
 
+      //Llamamos la nueva entidad e instanciamos la obra.
       var obrainstanciada = new Obra("", "", "", "");
+      //Llamamos la función de seleccionar a todos para poder así cargarlos en la tabla
       obrainstanciada.Seleccionartodos().then(
         function (response) {
           cargartabla(response);
@@ -99,10 +108,14 @@
         }
       );
 
+      //Creamos la función para cargar nuestra tabla
       function cargartabla(datos) {
+        //Llamamos el espacio de la tabla para crear e imprimir el DataTable
         document.getElementById("espacioparatabla").innerHTML =
+        //Insertamos la tabla
           '<table style="color:#000;" id="obratabla" class="display"><thead> <th>id</th> <th>nombre</th><th>creador</th> <th>calificacion</th> <th>Modificar</th> <th>Eliminar</th> <th>Calificar</th> </thead><tbody></tbody></table>';
           listadeobrasenmemoria = datos;
+          //Llamamos la tabla en específico para definir los datos a imprimir
         $("#obratabla").DataTable({
           "data": datos,
           "columns": [
@@ -116,16 +129,22 @@
           ],
         });
       }
+      //Creamos la función de guardar
       function guardar() {
+        //Instanciamos nuevamente la obra
         var obrainstanciada = new Obra(
+          //Obtenemos los valores de los inputs y los insertamos en los valores de la entidad
           document.getElementById("id").value,
           document.getElementById("nombre").value,
           usuario.nombre,
+          //El calificar lo declaramos como un string vacío, debido a que no lo guardaremos en esta función, será definida después al calificar
           ' ' 
         );
         console.log(obrainstanciada);
+        //Utilizamos la función Guardar de la obra, para poder hacer la petición al servidor
         obrainstanciada.Guardar().then(
           function (response) {
+            //Cargamos la respuesta enviada por el guardar
             cargartabla(response);
             console.log(response);
             alert("Guardado");
@@ -136,14 +155,18 @@
         );
       }
 
+      // Creamos la función de modificar, en esta función llamaremos los valores del archivo a los inputs que nos permitiran editar (el primer paso)
       function modificaobraprimerpaso(id) {
+        // Creamos un ciclo para recorrer la lista de las obras, una por una
         for (var ele in listadeobrasenmemoria) {
           if (listadeobrasenmemoria[ele].id == id) {
+            // Lo guardamos en el objeto a modificar
             objetoobrasparamodificar = listadeobrasenmemoria[ele];
             break;
           }
         }
 
+        // Obtenemos el valor de los IDs y los igualamos a los atributos del objeto
         document.getElementById("id").value =
         objetoobrasparamodificar.id;
         document.getElementById("id").setAttribute("disabled", true)
@@ -155,7 +178,9 @@
           .setAttribute("onClick", "modificaenarchivo()");
       }
 
+      //Creamos la función donde concretamente se va a modificar el archivo
       function modificaenarchivo() {
+        //Instanciamos una nueva obra, ya que esta función es muy similar al guardar
         var obrainstanciada = new Obra(
           document.getElementById("id").value,
           document.getElementById("nombre").value,
@@ -163,11 +188,14 @@
           ' ',
         );
         
+        // Ya con los valores definidos en el objeto, enviamos los valores como promesa a la función de Modificar http
         obrainstanciada.Modificar().then(
           function (response) {
+            //Devolvemos la respuesta en la tabla
             cargartabla(response);
             console.log(response);
             alert("Modificado");
+            // Vaciamos los inputs y retornamos el valor de Guardar estando de Modificar
             (document.getElementById("id").value = ""),
             (document.getElementById("nombre").value = ""),
             document.getElementById("botonaccion").value = "Guardar";
@@ -180,10 +208,15 @@
           }
         );
       }
+
+      // Creamos la función para eliminar la obra
       function eliminaobra(id) {
+        // Instanciamos la obra
         var obrainstanciada = new Obra(id, "", "", "");
+        // Enviamos la promesa a la función de eliminar
         obrainstanciada.Eliminar().then(
           function (response) {
+            // Cargamos la tabla con la respuesta
             cargartabla(response);
             console.log(response);
             alert("Eliminado");
@@ -193,14 +226,19 @@
           }
         );
       }
+
+      // Creamos la función para calificar la obra
       function calificaobra(id) {
+        // Creamos un ciclo para recorrer la lista de las obras, una por una
         for (var ele in listadeobrasenmemoria) {
           if (listadeobrasenmemoria[ele].id == id) {
+            // Lo guardamos en el objeto a modificar
             objetoobrasparamodificar = listadeobrasenmemoria[ele];
             break;
           }
         }
 
+        // Obtenemos el valor de los IDs y los igualamos a los atributos del objeto
         document.getElementById("id").value =
         objetoobrasparamodificar.id;
         document.getElementById("id").setAttribute("disabled", true);
@@ -215,7 +253,9 @@
           .setAttribute("onClick", "calificaobraarchivo()");
       }
 
+      //Creamos la función donde concretamente se va a calificar el archivo
       function calificaobraarchivo() {
+        //Instanciamos una nueva obra, ya que esta función es muy similar al guardar
         var obrainstanciada = new Obra(
           document.getElementById("id").value,
           document.getElementById("nombre").value,
@@ -223,11 +263,12 @@
           document.getElementById("calificacion").value,
         );
         
+        // Ya con los valores definidos en el objeto, enviamos los valores como promesa a la función de Modificar http
         obrainstanciada.Calificar().then(
           function (response) {
             cargartabla(response);
             console.log(response);
-            alert("Modificado");
+            alert("Calificado");
             (document.getElementById("id").value = ""),
             document.getElementById("id").removeAttribute("disabled", true),
             (document.getElementById("nombre").value = ""),
@@ -244,6 +285,8 @@
           }
         );
       }
+
+      //NOTA: El calificar funciona de forma muy similar al modificar, ya que mandamos como valor vacío el atributo de calificar hasta que el usuario lo desee calificar.
       
     </script>
   </body>
